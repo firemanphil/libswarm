@@ -217,13 +217,14 @@ func (c *ec2Client) findInstance() (instance *ec2.Instance, err error) {
 		if resp.Reservations == nil {
 			return nil, nil
 		}
+                for _,reservation := range resp.Reservations {
+                    for _,instance := range reservation.Instances {
 
-		instance := resp.Reservations[0].Instances[0]
-
-		if instance.State.Name == "running" || instance.State.Name == "pending" {
-			return &instance, nil
-		}
-
+                       if instance.State.Name == "running" || instance.State.Name == "pending" {
+                           return &instance, nil
+                       }
+                    }
+                }
 		return nil, nil
 	}
 }
